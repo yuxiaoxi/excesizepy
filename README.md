@@ -1,6 +1,6 @@
-python可以做什么呢？
+## python可以做什么呢？
 
-1、桌面应用
+### 1、桌面应用
 
 我们一键生成app的脚手架就是例子
 
@@ -8,23 +8,23 @@ python可以做什么呢？
 
 
 
-2、游戏应用
+### 2、游戏应用
 
 不到300行的代码完成一个简易的飞机大战游戏：
 
 
 
-3、web应用
+### 3、web应用
 
 作为一个脚本语言web应用是必须支持的，常见的web框架有django,flask
 
-4、server
+### 4、server
 
 当然不在话下，作为一个月活超过5亿的app instagram 就是用python作server支撑的
 
 
 
-5、爬虫
+### 5、爬虫
 
 是最常见而且十分适合初学者学习的一个功能。
 
@@ -32,74 +32,51 @@ python可以做什么呢？
 
 现在手把手来分享下一个简易的爬虫程序。
 
-粟子1：获取某天气网站的天气数据
+#### 粟子1：获取某天气网站的天气数据
 
 天气和空气质量的网站:http://www.pm25.com/shanghai.html
 
 
-
+```
 site = 'http://www.pm25.com/shanghai.html'
 html = urllib2.urlopen(site)
 soup = BeautifulSoup(html, "lxml")
-
- 
-
- 
-
-
-
 quality = soup.find("span",{"class","bi_aqiarea_wuran"})
-
- 
-
-
-
 city = soup.find(class_='bi_loaction_city')
-
- 
-
-
-
 aqi = soup.find("a",{"class","bi_aqiarea_num"})
-
-
-
 desc = soup.find("div",{"class","bi_aqiarea_bottom"})
+```
 
-粟子2：获取csdn xx用户首页的所有文章标题
+#### 粟子2：获取csdn xx用户首页的所有文章标题
 
 xx用户的首页地址：http://blog.csdn.net/u014351782
 
+```
 soup.select('div #article_list .list_item div.article_title span.link_title')[0].text
 
 for item in soup.select('div #article_list .list_item div.article_title span.link_title'):
 print item.text
-
+```
 上面的还是比较简单的！下面来点有难度的粟子
 
-粟子3：豆瓣top250电影抓取
+#### 粟子3：豆瓣top250电影抓取
 
 电影网址：https://movie.douban.com/top250?start=25&filter=
 
-
-
-网页显示的html源码：
-
-
-
+网页显示的html源码：使用浏览器工具
 先观查html源码发现获取需要的字段的方法如下：
-
+```
 i = 1
 print soup.select('ol.grid_view em.')[1*i].text #排名
 print soup.select('ol.grid_view div.item div.pic img')[i].attrs['alt'] #标题
 print str(soup.select('ol.grid_view div.info div.bd p.')[1*i].text.encode("utf-8")).lstrip().rstrip() #基本描述
 print soup.select('ol.grid_view div.info div.bd span.rating_num')[1*i].text #评分
 print soup.select('ol.grid_view div.info div.bd div.star span')[4*i +3].text #评论数
-
+```
 找到了后然后开始写完整代码。
 
 首先需要个专门来存每部电影基本信息的实体类吧！MovieInfo
-
+```
 class MovieInfo:
 def __init__(self,rank,title,desc,stars,commentcount):
 self.rank = rank
@@ -107,7 +84,7 @@ self.title = title
 self.desc = desc
 self.stars = stars
 self.commentcount = commentcount
-
+```
 然后再写个爬取电影的类。
 
 有三个方法：构造方法__init__(self)，
@@ -119,7 +96,7 @@ self.commentcount = commentcount
 写入文件的方法writeToFile(self)
 
 执行方法main(self)。
-
+```
 # coding=utf-8
 import urllib2
 from bs4 import BeautifulSoup
@@ -192,31 +169,31 @@ self.writeToFile()
 if __name__ == '__main__':
 dbmovie = Movie250()
 dbmovie.main()
-
+```
 最后看下爬取的结果：
 
 
 
  
 
-粟子4：抓取xx网站的图片
+#### 粟子4：抓取xx网站的图片
 
 http://www.nphoto.net/news/2012-02/20/b143d88f8f937f69.shtml
 
 单线程下载图片
-
+```
 for imgurl in self.imageList:
 self.download(imgurl)
-
+```
 多线程下载图片：
 
 引入线程池方式threadpool
-
+```
 pool = threadpool.ThreadPool(10)
 requests = threadpool.makeRequests(self.download, self.imageList)
 [pool.putRequest(req) for req in requests]
 pool.wait()
-
+```
 附录：
 
 bs4 安装
